@@ -31,7 +31,7 @@
 
 | component |               Name |      Spec       |
 | :-------: | :----------------: | :-------------: |
-| CPU       | AMD Ryzen9 9950X3D | 2sckets 20C40T  |
+| CPU       | AMD Ryzen9 9950X3D | 16C32T          |
 | RAM       |               DDR5 |      64GB       |
 | Storage   |       M.2 SSD gen5 |       1TB       |
 | NIC       |  PCIe slot x4 lane | 1port 10GBASE-T |
