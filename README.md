@@ -20,7 +20,7 @@
 
 | component |                 Name |      Spec       |
 | :-------: | :------------------: | :-------------: |
-| CPU       | Intel Xepn E5-2470v2 | 2sckets 20C40T  |
+| CPU       | Intel Xeon E5-2470v2 | 2sockets 20C40T  |
 | RAM       |             DDR3 ECC |      192GB      |
 | Storage   |    HP SAS HDD 6TB x4 |      24TB       |
 | NIC       |              X540-T2 | 2port 10GBASE-T |
@@ -59,7 +59,7 @@ flowchart TB
         C["Main PC"]
     end
     
-    subgraph Peripherals["sub net"]
+    subgraph Peripherals["1Gbps Devices"]
         F["Printer"]
         G["TV Server"]
         H["Google Home<br/>Streamer"]
@@ -109,6 +109,7 @@ flowchart TB
 
 ---
 # 今後のロードマップ
+### 優先度降順
 - [ ] AP追加で1FでのWi-Fi環境の改善
 - [ ] 5700G機のメモリ増設
 - [ ] メインPCのメモリ増設
