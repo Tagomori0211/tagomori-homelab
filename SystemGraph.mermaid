@@ -1,0 +1,32 @@
+flowchart TB
+    subgraph WAN["🌐 WAN"]
+        D["ONU<br/>10Gbps"]
+    end
+    
+    subgraph Network["Network"]
+        E["10G Router"]
+        A["TX2540M1<br>10G Bridge"]
+        B["Ryzen5700G<br>10G Bridge"]
+        C["Main PC"]
+    end
+    
+    subgraph Peripherals["1Gbps Devices"]
+        F["Printer"]
+        G["TV Server"]
+        H["Google Home<br/>Streamer"]
+    end
+    
+    D -->|10Gbps| E
+    E -->|10Gbps| A
+    A -->|10Gbps| B
+    B -->|10Gbps| C
+    
+    B -->|1Gbps| F
+    B -->|1Gbps| G
+    B -->|1Gbps| H
+    
+    classDef dark_blue fill:#1a3a52,stroke:#0d5a8f,color:#fff
+    classDef dark_gray fill:#3a3a3a,stroke:#5a5a5a,color:#fff
+    
+    class D,E,A,B,C dark_blue
+    class F,G,H dark_gray
