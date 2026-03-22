@@ -117,9 +117,9 @@ flowchart TB
     A -->|10Gbps| B
     B -->|10Gbps| C
     
-    B -->|1Gbps| F
-    B -->|1Gbps| G
-    B -->|1Gbps| H
+    B --->|1Gbps| F
+    B --->|1Gbps| G
+    B --->|1Gbps| H
     
     classDef dark_blue fill:#1a3a52,stroke:#0d5a8f,color:#fff
     classDef dark_gray fill:#3a3a3a,stroke:#5a5a5a,color:#fff
