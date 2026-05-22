@@ -29,6 +29,9 @@
 | Fujitsu TX2540M1     | ストレージサーバー       |
 | 自作PC Ryzen 5700G機 | アプリケーションサーバー |
 | 自作PC メインPC     | 普段使い                  |
+| Printer              | 印刷機                    |
+| TV Server and AP Machine   | 動画サーバー and 無線AP  |
+| Google Home Streamer | スマートホーム           |
 
 ---
 
@@ -56,6 +59,26 @@
 | NIC        | X540-T2               | 2ポート 10GBASE-T |
 | OS         | Proxmox               | 9.1               |
 
+### TV server and AP Machine
+
+| 項目       | 名称                  | 仕様              |
+|------------|-----------------------|-------------------|
+| CPU        | Intel core i5 6400  | 4C4T  |
+| メモリ     | DDR4               | 16GB             |
+| ストレージ | SATA HDD      | 8TB            |
+| NIC        | Onbord            | 1000BASSE=T |
+| OS         | Proxmox               | 9.1               |
+
+### 🔹 メインPC
+
+| 項目       | 名称                 | 仕様              |
+|------------|----------------------|-------------------|
+| CPU        | AMD Ryzen 9 9950X3D  | 16C32T            |
+| メモリ     | DDR5                 | 64GB              |
+| ストレージ | M.2 SSD Gen5         | 1TB               |
+| NIC        | PCIe ×4レーン        | 1ポート 10GBASE-T |
+| OS         | Windows 11 Home      | Home              |
+---
 #### 選定理由と制約駆動設計
 
 **制約条件:**
@@ -69,25 +92,17 @@
 - Ryzen 5700G（Zen3アーキテクチャ）で高IPC・単スレッド性能を確保
 - APU統合（Gモデル）でグラフィックスロット問題を解消
 - DDR4 64GBで必要十分なメモリ帯域を確保
+- AP代替として安価なWiFiカードをLXCコンテナでAP化
 
 **結果:**
 - Minecraftサーバーの応答性が大幅改善
 - グラフィックカード不要により省スペース・低消費電力を実現
+- 高価なWiFi APを購入せずに済んだ+PoEスイッチも不要
 - 制約を技術選定によって設計上の強みに転換
 
 ---
 
-### 🔹 メインPC
 
-| 項目       | 名称                 | 仕様              |
-|------------|----------------------|-------------------|
-| CPU        | AMD Ryzen 9 9950X3D  | 16C32T            |
-| メモリ     | DDR5                 | 64GB              |
-| ストレージ | M.2 SSD Gen5         | 1TB               |
-| NIC        | PCIe ×4レーン        | 1ポート 10GBASE-T |
-| OS         | Windows 11 Home      | Home              |
-
----
 
 ## 🗺️ 構成図（物理接続関係）
 
@@ -106,26 +121,30 @@ flowchart TB
         C["Main PC"]
     end
     
-    subgraph Peripherals["1Gbps Devices"]
+    subgraph 1Gbps_Devices["1Gbps Devices"]
+        AP["AP Machine"]
         F["Printer"]
-        G["TV Server"]
         H["Google Home<br/>Streamer"]
     end
     
-    D -->|10Gbps| E
-    E -->|10Gbps| A
-    A -->|10Gbps| B
-    B -->|10Gbps| C
+    D ==>|10Gbps| E
+    E ==>|10Gbps| A
+    A ==>|10Gbps| B
+    B ==>|10Gbps| C
     
     B --->|1Gbps| F
-    B --->|1Gbps| G
     B --->|1Gbps| H
+    B --->|1Gbps| AP
+    AP ===>|WiFi| I[Mobile]
     
     classDef dark_blue fill:#1a3a52,stroke:#0d5a8f,color:#fff
     classDef dark_gray fill:#3a3a3a,stroke:#5a5a5a,color:#fff
+    classDef Network fill:#999,stroke:#fff,color:#fff
     
     class D,E,A,B,C dark_blue
-    class F,G,H dark_gray
+    class F,G,H,AP dark_gray
+    class Network,1Gbps_Devices Network
+
 ```
 
 ---
@@ -144,6 +163,7 @@ flowchart TB
 - 物理故障時はRJ45コネクタによるバイパス運用を想定。
 - 単一障害点が多いことは認識した上で、コスト優先でリスクを受容。
 - 差し替えのみで復旧可能な構成とし、下流影響は数分程度に抑えられる。
+- ルーターとメインPCのWiFi直結によるフェイルオーバー構成も確保。
 
 ### 🔌 PoEスイッチ不採用の理由
 
@@ -166,13 +186,13 @@ flowchart TB
 ➡ **約115,000円の削減**  
 ➡ **約96%のコスト削減に成功**
 
-最悪時はルーターとメインPCを直結する**フェイルセーフ構成**も確保しています。
+故障時はルーターとメインPCをWiFiで直結する**フェイルセーフ構成**も確保しています。
 
 ---
 
 ## 🛣️ 今後のロードマップ（優先度降順）
 
-- [ ] AP追加による1F Wi-Fi環境の改善  
+- [x] AP追加による1F Wi-Fi環境の改善  
 - [ ] Ryzen 5700G機のメモリ増設  
 - [ ] メインPCのメモリ増設  
 - [ ] 可用性向上のため段階的に10Gスイッチを導入予定  

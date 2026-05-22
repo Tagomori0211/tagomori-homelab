@@ -10,23 +10,24 @@ flowchart TB
         C["Main PC"]
     end
     
-    subgraph Peripherals["1Gbps Devices"]
+    subgraph 1Gbps_Devices["1Gbps Devices"]
+        AP["AP Machine"]
         F["Printer"]
-        G["TV Server"]
         H["Google Home<br/>Streamer"]
     end
     
-    D -->|10Gbps| E
-    E -->|10Gbps| A
-    A -->|10Gbps| B
-    B -->|10Gbps| C
+    D ==>|10Gbps| E
+    E ==>|10Gbps| A
+    A ==>|10Gbps| B
+    B ==>|10Gbps| C
     
     B --->|1Gbps| F
-    B --->|1Gbps| G
     B --->|1Gbps| H
+    B --->|1Gbps| AP
+    AP ===>|WiFi| I[Mobile]
     
     classDef dark_blue fill:#1a3a52,stroke:#0d5a8f,color:#fff
     classDef dark_gray fill:#3a3a3a,stroke:#5a5a5a,color:#fff
     
     class D,E,A,B,C dark_blue
-    class F,G,H dark_gray
+    class F,G,H,AP dark_gray
